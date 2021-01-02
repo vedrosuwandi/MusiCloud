@@ -17,10 +17,9 @@ class FolderController extends Controller
      */
     public function index()
     {
-        $Folders = Folder::latest()->paginate(10);
-        return view('Folders.index', compact('Folders'))
-            ->with('i', (request()->input('page', 1) - 1) * 10);
+        $folders = Folder::where('user_ID', Auth::user()->id)->get();
 
+        return view('MusiCloud.folder', compact('folders'));
     }
 
     /**
@@ -44,7 +43,6 @@ class FolderController extends Controller
         $folder = new Folder();
         $folder->folder_Name = $request->folder_Name;
         $folder->user_ID = Auth::user()->id;
-
         $folder->save();
         return redirect()->back();
     }
@@ -55,12 +53,14 @@ class FolderController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show()
+    public function show($id)
     {
-        $folder = DB::select('select * from folders where user_ID = ?', [Auth::user()->id]);
 
-        return view('MusiCloud.folder',['folders'=>$folder]);
+        $folder = Folder::where('folder_ID' , $id)->first();
 
+        $musics = Music::where('folder_ID', $id)->get();
+
+        return view('MusiCloud.music', compact('folder', 'musics'));
     }
 
     /**

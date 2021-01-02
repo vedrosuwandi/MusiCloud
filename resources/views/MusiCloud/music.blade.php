@@ -21,12 +21,13 @@
           margin-right: 20px;
       }
   </style>
+
   <body>
         <!-- Option 1: Bootstrap Bundle with Popper -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
-            <a class="navbar-brand" href="/folder">Folder Name</a>
+            <a class="navbar-brand" id= "foldername" href="/folders">{{$folder->folder_Name}}</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -43,8 +44,24 @@
             </div>
         </nav>
 
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
-        <!-- Create Folder -->
+        @if ($message = Session::get('success'))
+            <div class="alert alert-success alert-block">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <strong>{{ $message }}</strong>
+            </div>
+        @endif
+
+        <!-- Upload Music -->
         <div class="modal fade" id="Upload" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -55,8 +72,9 @@
                 </button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{route('upload')}}" method="POST">
+                <form enctype="multipart/form-data" action="{{route('music.store')}}" method="POST">
                         @csrf
+                        <input type="text" name="folder_ID" value="{{ $folder->folder_ID }}" hidden>
                         <div class="form-group">
                             <label for="exampleFormControlInput1">Title</label>
                             <input type="label" class="form-control" id="exampleFormControlInput1" name="title" placeholder="Title">
@@ -72,17 +90,19 @@
                         <div class="form-group">
                             <label for="exampleFormControlFile1">Insert Music</label>
                         <br>
-                            <input type="file" class="form-control-file" id="exampleFormControlFile1" name="file">
+                            <input type="file" class="form-control-file" id="exampleFormControlFile1" name="music">
                         </div>
                     </div>
                     <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Upload</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Upload</button>
                     </div>
                 </form>
             </div>
             </div>
         </div>
+
+
 
         <div class="container">
             <div class = "row mt-3">
@@ -94,49 +114,27 @@
                                     <th scope="col" class="col-3">Title</th>
                                     <th scope="col" class="col-1">Artist</th>
                                     <th scope="col" class="col-1">Genre</th>
-                                    <th scope="col" class="col-3">File</th>
+                                    <th scope="col" class="col-4">File</th>
                                     <th scope="col" class="col-2">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                @foreach ($musics as $music)
                                 <tr>
-                                    <td>Title</td>
-                                    <td>Artist</td>
-                                    <td>Genre</td>
-                    <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Upload</button>
-                    </div>
-                </form>
-            </div>
-            </div>
-        </div>
-
-        <div class="container">
-            <div class = "row mt-3">
-                <div class = "col-12">
-                    <div class="col-sm-12">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th scope="col" class="col-3">Title</th>
-                                    <th scope="col" class="col-1">Artist</th>
-                                    <th scope="col" class="col-1">Genre</th>
-                                    <th scope="col" class="col-3">File</th>
-                                    <th scope="col" class="col-2">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Title</td>
-                                    <td>Artist</td>
-                                    <td>Genre</td>
-                                    <td>File</td>
+                                    <td>{{$music->title}}</td>
+                                    <td>{{$music->artists}}</td>
+                                    <td>{{$music->genre}}</td>
+                                    <td>{{$music->file}}</td>
                                     <td>
                                         <button type="button" class="btn btn-outline-primary">Download</button>
-                                        <button type="button" class="btn btn-outline-danger">Delete</button>
+                                        <form action="{{route('music.destroy' , array('id' => $music->music_ID))}}" method="POST">
+                                            @csrf
+                                            {{ method_field('DELETE') }}
+                                            <button type="submit" class="btn btn-outline-danger">Delete</button>
+                                        </form>
                                     </td>
                                 </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -144,4 +142,5 @@
             </div>
       </div>
   </body>
+
 </html>

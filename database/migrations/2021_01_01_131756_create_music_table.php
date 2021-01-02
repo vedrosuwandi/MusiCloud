@@ -17,7 +17,7 @@ class CreateMusicTable extends Migration
             $table->integerIncrements('music_ID');
             $table->integer('folder_ID')->unsigned();
             #$table->foreign('folder_ID')->references('music_ID')->on('folders');
-            $table->foreign('folder_ID')->references('folder_ID')->on('folders');
+            $table->foreign('folder_ID')->references('folder_ID')->on('folders')->onDelete('Cascade');
             $table->string('title');
             $table->string('artists');
             $table->string('genre');

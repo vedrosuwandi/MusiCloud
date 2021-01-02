@@ -21,25 +21,16 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-Auth::routes();
-
 Route::get('/logout', [App\Http\Controllers\HomeController::class, 'logout'])->name('logout');
 
 
+Route::get('/folders', [App\Http\Controllers\FolderController::class, 'index'])->name('folder.index');
+Route::post('/folder', [App\Http\Controllers\FolderController::class, 'store'])->name('folder.store');
+Route::get('/folder/{id}', [App\Http\Controllers\FolderController::class, 'show'])->name('folder.show');
+Route::delete('/folder/{id}', [App\Http\Controllers\FolderController::class, 'destroy'])->name('folder.destroy');
 
-Route::post('/create', [App\Http\Controllers\FolderController::class, 'store'])->name('addFolder');
-Route::get('/folder', [App\Http\Controllers\FolderController::class, 'show'])->name('folder');
-Route::post('/folder/delete/{id}', [App\Http\Controllers\FolderController::class, 'destroy'])->name('deleteFolder');
-
-
-Route::post('/musics/{id}', [App\Http\Controllers\MusicController::class, 'show'])->name('musics');
-Route::post('/musics/{id}/upload', [App\Http\Controllers\MusicController::class, 'store'])->name('upload');
-
-
+Route::post('/music', [App\Http\Controllers\MusicController::class, 'store'])->name('music.store');
+Route::delete('/music/{id}', [App\Http\Controllers\MusicController::class, 'destroy'])->name('music.destroy');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/home', function () {
     return view('MusiCloud/home');

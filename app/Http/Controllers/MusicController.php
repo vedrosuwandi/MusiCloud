@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Music;
 use App\Models\Folder;
-
+use Illuminate\Support\Facades\Validator;
 
 class MusicController extends Controller
 {
@@ -38,16 +38,29 @@ class MusicController extends Controller
      */
     public function store(Request $request)
     {
-        /*
-        $music = new Music();
-        $music->folder_ID = ;
+
+        $validate = Validator::make($request->all(),
+            [   'folder_ID' => 'required',
+                'title' => 'required',
+                'artist' => 'required',
+                'genre' => 'required',
+                'music' => 'required|mimes:application/octet-stream,audio/mpeg,mpga,mp3,wav'
+                ]
+        );
+        $validate->validate();
+
+        // store the music file temporarily
+        $temp =  $request->file('music');
+
+        $music = new Music;
+        $music->folder_ID = $request->folder_ID;
         $music->title = $request->title;
-        $music->artists = $request->artists;
+        $music->artists = $request->artist;
         $music->genre = $request->genre;
-        $music->file = $request->file;
+        $music->file = $temp->getClientOriginalName();
         $music->save();
-        return redirect()->back();
-        */
+
+        return redirect('/folder/'.$request->folder_ID)->with('success', 'you have uploaded a music');
     }
 
     /**
@@ -56,9 +69,8 @@ class MusicController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
-
         /*
          $rooms = DB::table('members')
         ->select('room.id' ,'room.name','room.age', 'room.gender', 'room.topic')
@@ -68,9 +80,10 @@ class MusicController extends Controller
 
         return view('Chat.public_chat' , ['rooms' => $rooms]);
         */
-        $music = DB::select('select * from music where folder_ID = ?', [$id] );
-        return view('MusiCloud.music',['music'=>$music]);
-
+/*
+        $musics = DB::select('select * from music where folder_ID = ?', [$id] );
+        return view('MusiCloud.music', compact('id','musics'));
+*/
     }
 
     /**
@@ -104,6 +117,7 @@ class MusicController extends Controller
      */
     public function destroy($id)
     {
-        //
+        DB::table('music')->where('music_ID' , $id)->delete();
+        return redirect()->back();
     }
 }

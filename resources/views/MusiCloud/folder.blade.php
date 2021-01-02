@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
@@ -60,7 +61,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
                 </div>
-                <form action="{{route('addFolder')}}" method="POST">
+                <form action="{{route('folder.store')}}" method="POST">
                     @csrf
                     <div class="modal-body">
                         <div class="form-group">
@@ -89,19 +90,20 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @foreach ($folders as $folder)
                             <tr>
-                                @foreach ($folders as $folder)
                                 <td class="col-sm-9">
-                                <a href="" class="list-group-item list-group-item-action">{{$folder->folder_Name}}</a>
+                                    <a href="{{route('folder.show' , $folder->folder_ID)}}"  id='foldername' class="list-group-item list-group-item-action">{{$folder->folder_Name}}</a>
                                 </td>
                                 <td  class="col-sm-1">
-                                    <form action="{{route('deleteFolder' , array('id' => $folder->music_ID))}}" method="POST">
+                                    <form action="{{route('folder.destroy' , array('id' => $folder->folder_ID))}}" method="POST">
                                         @csrf
+                                        {{ method_field('DELETE') }}
                                         <button type="submit" class="btn btn-outline-danger ml-1">Delete</button>
                                     </form>
                                 </td>
-                                @endforeach
                             </tr>
+                            @endforeach
                         </tbody>
                     </table>
                     </div>
@@ -110,4 +112,5 @@
         </div>
 
   </body>
+
 </html>

@@ -62,7 +62,7 @@ http://www.tooplate.com/view/2101-insertion
                     <div class="hidden fixed top-0 right-0 px-6 py-4 sm:block">
                         @auth
                             {{Auth::user()->name}}
-                            <a href="{{route('folder')}}" class="text-sm text-indigo-700 underline ml-3" id="logout" style="color: white">My Musics</a>
+                            <a href="{{route('folder.index')}}" class="text-sm text-indigo-700 underline ml-3" id="logout" style="color: white">My Musics</a>
                             <a href="{{ route('logout') }}" class="text-sm text-indigo-700 underline ml-3" id="logout" style="color: white">Log Out</a>
                         @else
                             <a href="{{ route('login') }}" class="text-sm text-indigo-700 underline" id="login" style="color: white">Login</a>
