@@ -31,6 +31,8 @@ Route::delete('/folder/{id}', [App\Http\Controllers\FolderController::class, 'de
 
 Route::post('/music', [App\Http\Controllers\MusicController::class, 'store'])->name('music.store');
 Route::delete('/music/{id}', [App\Http\Controllers\MusicController::class, 'destroy'])->name('music.destroy');
+Route::get('/music/{id}/download' ,  [App\Http\Controllers\MusicController::class, 'download'])->name('music.download');
+
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/home', function () {
     return view('MusiCloud/home');

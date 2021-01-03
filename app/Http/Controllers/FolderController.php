@@ -7,6 +7,7 @@ use App\Models\Folder;
 use App\Models\Music;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class FolderController extends Controller
 {
@@ -57,7 +58,6 @@ class FolderController extends Controller
     {
 
         $folder = Folder::where('folder_ID' , $id)->first();
-
         $musics = Music::where('folder_ID', $id)->get();
 
         return view('MusiCloud.music', compact('folder', 'musics'));
@@ -94,6 +94,9 @@ class FolderController extends Controller
      */
     public function destroy($id)
     {
+
+        $folder = Folder::where('folder_ID' , $id)->first();
+        Storage::disk('s3')->deleteDirectory($folder->folder_Name);
         DB::table('folders')->where('folder_ID' , $id)->delete();
         return redirect()->back();
     }

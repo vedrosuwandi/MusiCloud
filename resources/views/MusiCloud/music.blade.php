@@ -126,7 +126,7 @@
                                     <td>{{$music->genre}}</td>
                                     <td>{{$music->file}}</td>
                                     <td>
-                                        <button type="button" class="btn btn-outline-primary">Download</button>
+                                        <a href="{{env('AWS_S3_URL').$music->file}}" target="_blank" type="submit" class="btn btn-outline-primary">Get Link</a>
                                         <form action="{{route('music.destroy' , array('id' => $music->music_ID))}}" method="POST">
                                             @csrf
                                             {{ method_field('DELETE') }}

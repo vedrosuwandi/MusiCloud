@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Music;
 use App\Models\Folder;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class MusicController extends Controller
@@ -58,8 +59,11 @@ class MusicController extends Controller
         $music->artists = $request->artist;
         $music->genre = $request->genre;
         $music->file = $temp->getClientOriginalName();
-        $music->save();
+        //store in the local
 
+        $folder = Folder::where('folder_ID' , $request->folder_ID)->first();
+        $music->file = $request->file('music')->store($folder->folder_Name , 's3');
+        $music->save();
         return redirect('/folder/'.$request->folder_ID)->with('success', 'you have uploaded a music');
     }
 
@@ -117,7 +121,15 @@ class MusicController extends Controller
      */
     public function destroy($id)
     {
+        $music = Music::where('music_ID' , $id)->first();
+        Storage::disk('s3')->delete($music->file);
         DB::table('music')->where('music_ID' , $id)->delete();
         return redirect()->back();
+    }
+
+    public function download($id){
+
+
+
     }
 }
