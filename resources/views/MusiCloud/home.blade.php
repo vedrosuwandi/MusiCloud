@@ -84,7 +84,7 @@ http://www.tooplate.com/view/2101-insertion
         <div class="tm-welcome">
           <i class="fas tm-fa-big fa-music tm-fa-mb-big"></i>
           <h1 class="text-uppercase mb-3 tm-site-name">MusiCloud</h1>
-          <p class="tm-site-description">Store your Musics in a Full Availability</p>
+          <p class="tm-site-description">Store all kinds of Musics</p>
         </div>
       </div>
 
